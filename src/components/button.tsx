@@ -1,0 +1,45 @@
+import React, {FC} from 'react';
+import {useEffect} from 'react';
+import {SafeAreaView, StyleSheet, Text, TouchableOpacity} from 'react-native';
+
+interface Title {
+  key: number;
+  answer: string;
+  onPress: () => void;
+  correct: boolean;
+  disabled: boolean;
+}
+// Component changes style according to the correct answer on pressing the button
+// and disables other buttons according to passed props from the parent class.
+const Buttons: FC<Title> = ({key, answer, onPress, correct, disabled}) => {
+  useEffect(() => {}, []);
+  return (
+    <SafeAreaView>
+      <TouchableOpacity
+        style={{
+          backgroundColor: !disabled ? '#F5F5DC' : '#F5DEB3',
+          width: '80%',
+          elevation: 5,
+          justifyContent: 'center',
+          marginLeft: 27,
+          height: 38,
+          marginTop: 10,
+        }}
+        onPress={() => onPress()}>
+        <Text style={[styles.textstyle, {color: correct ? 'brown' : 'black'}]}>
+          {answer}
+        </Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  textstyle: {
+    textAlign: 'left',
+    fontSize: 17,
+    marginLeft: 8,
+  },
+});
+
+export default Buttons;
