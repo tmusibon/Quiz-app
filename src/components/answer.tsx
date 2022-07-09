@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import Buttons from './button';
-import {AnswerObject} from '../screens/Quiz';
+import {AnswerObject} from '../screens/quiz';
 
 interface Answers {
   useranswer: AnswerObject | undefined;
@@ -19,20 +19,21 @@ const Answers: FC<Answers> = ({
   return (
     <SafeAreaView>
       <View style={{marginTop: 10, paddingHorizontal: 20}}>
-        {answer.map((answer, key) => {
-          return (
-            <View key={answer}>
-              <Buttons
-                {...{key, answer}}
-                correct={useranswer?.correctanswer === answer}
-                disabled={useranswer ? true : false}
-                onPress={() => {
-                  (setcorrectanswer.current = answer), checkanswer();
-                }}
-              />
-            </View>
-          );
-        })}
+        {answer &&
+          answer.map((answer, key) => {
+            return (
+              <View key={answer}>
+                <Buttons
+                  {...{key, answer}}
+                  correct={useranswer?.correctanswer === answer}
+                  disabled={useranswer ? true : false}
+                  onPress={() => {
+                    (setcorrectanswer.current = answer), checkanswer();
+                  }}
+                />
+              </View>
+            );
+          })}
       </View>
     </SafeAreaView>
   );

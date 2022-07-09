@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {getquestions, Question} from '../utils/api';
+import {getquestiojns, Question} from '../utils/api';
 import Questions from '../components/questions';
 import Answers from '../components/answer';
 import {Icon} from 'react-native-elements';
@@ -21,80 +21,156 @@ export type AnswerObject = {
 const Quiz: FC = props => {
   const [loader, setloader] = useState(false);
   const [question, setquestion] = useState<Question[]>([]);
-  const [useranswers, setuseranswers] = useState<AnswerObject>([]);
+  const [useranswers, setuseranswers] = useState<AnswerObject[]>([]);
   const [score, setscore] = useState(0);
   const [number, setnumber] = useState(0);
   const [totalquestion] = useState(10);
   const [gameover, setgameover] = useState(true);
   const setcorrectanswer = useRef(null);
-  const [correct, setcorrect] = useState('');
+  const [correcta, setcorrecta] = useState('');
 
   useEffect(() => {
     startQuiz();
   }, []);
-
   const startQuiz = async () => {
     setnumber(0);
     setloader(true);
     setgameover(false);
-    const newquestions = await getquestions();
+    const newquestions = await getquestiojns();
     console.log(newquestions);
     setquestion(newquestions);
     setscore(0);
     setuseranswers([]);
     setloader(false);
   };
-
   const nextQuestion = () => {
     const nextq = number + 1;
-    if (nextq === totalquestion) {
+    if (nextq == totalquestion) {
       setgameover(true);
     } else {
       setnumber(nextq);
     }
   };
-
   const checkanswer = () => {
     if (!gameover) {
       const answer = setcorrectanswer.current;
-      const correct = question[number].correct_answer === answer;
-      if (correct) setscore(prev => prev + 1);
+
+      const correcta = question[number].correct_answer === answer;
+
+      if (correcta) setscore(prev => prev + 1);
 
       const answerobject = {
         question: question[number].question,
         answer,
-        correct,
+        correcta,
         correctanswer: question[number].correct_answer,
       };
 
       setuseranswers(prev => [...prev, answerobject]);
       setTimeout(() => {
-        ``;
         nextQuestion();
       }, 1000);
     }
   };
+
   return (
     <View style={{flex: 1}}>
       {!loader ? (
-        <>
+        <View>
           <View style={styles.container}>
+            <Text style={styles.textstyle}>Questions</Text>
             <Text style={styles.textstyle}>
-              <Questions questionNo={0} question={''} />
-            </Text>
-            <Text style={styles.textstyle}>
-              {' '}
-              {number + 1} / {totalquestion}
+              {number + 1}/{totalquestion}
             </Text>
           </View>
           <View style={{marginLeft: 20}}>
-            {' '}
-            <Text style={styles.textstyle}> Score: {score}</Text>
+            <Text style={styles.textstyle}>Score : {score}</Text>
           </View>
-        </>
-      ) : null}
+          {question.length > 0 ? (
+            <>
+              <Questions
+                questionNo={number + 1}
+                question={question[number].question}
+              />
+              <Answers
+                answer={question[number].answers}
+                {...{setcorrectanswer, checkanswer}}
+                useranswer={useranswers ? useranswers[number] : undefined}
+              />
+            </>
+          ) : null}
+        </View>
+      ) : (
+        <ActivityIndicator
+          style={{justifyContent: 'center', top: 200}}
+          size={50}
+          color="black"
+        />
+      )}
+
+      <View>
+        {!gameover && !loader && number != totalquestion - 1 ? (
+          <TouchableOpacity onPress={() => nextQuestion()}>
+            <Icon
+              name="arrowright"
+              size={40}
+              color="black"
+              type="antdesign"
+              style={{left: 130, margin: 20}}
+              tvParallaxProperties={undefined}
+            />
+          </TouchableOpacity>
+        ) : number == totalquestion - 1 ? (
+          <TouchableOpacity onPress={() => startQuiz()}>
+            <Icon
+              name="controller-play"
+              size={40}
+              color="black"
+              type="entypo"
+              style={{left: 130, margin: 20}}
+              tvParallaxProperties={undefined}
+            />
+          </TouchableOpacity>
+        ) : null}
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 70,
+    backgroundColor: 'white',
+  },
+  textstyle: {padding: 15, fontSize: 15, color: 'blue'},
+  bottomview: {
+    padding: 13,
+    backgroundColor: 'blue',
+    borderRadius: 300,
+    width: 70,
+    height: 70,
+    position: 'absolute',
+    right: 20,
+    top: 550,
+  },
+  questioncontainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    marginTop: 10,
+    paddingRight: 16,
+  },
+  iconstyle: {
+    backgroundColor: 'blue',
+    borderRadius: 50,
+    width: 70,
+    height: 70,
+    margin: 5,
+    top: 100,
+    left: 260,
+  },
+});
 
 export default Quiz;
