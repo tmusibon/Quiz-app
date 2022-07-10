@@ -6,7 +6,7 @@ import Quiz from './src/screens/quiz';
 const App: FC = () => {
   return (
     <SafeAreaView style={{backgroundColor: 'white', flex: 1}}>
-      <HeaderClass title={'Quiz app'}></HeaderClass>
+      <HeaderClass title="Quiz app"></HeaderClass>
       <Quiz />
     </SafeAreaView>
   );

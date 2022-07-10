@@ -11,7 +11,7 @@ export type Question = {
   question: string;
   type: string;
 };
-export const getquestiojns = async () => {
+export const getquestions = async () => {
   const endpoint = 'https://opentdb.com/api.php?amount=10&category=9';
   const promise = await axios.get(endpoint);
   return promise.data.results.map((question: Question) => ({

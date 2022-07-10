@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {getquestiojns, Question} from '../utils/api';
+import {getquestions, Question} from '../utils/api';
 import Questions from '../components/questions';
 import Answers from '../components/answer';
 import {Icon} from 'react-native-elements';
@@ -36,7 +36,7 @@ const Quiz: FC = props => {
     setnumber(0);
     setloader(true);
     setgameover(false);
-    const newquestions = await getquestiojns();
+    const newquestions = await getquestions();
     console.log(newquestions);
     setquestion(newquestions);
     setscore(0);
